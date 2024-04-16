@@ -3,8 +3,8 @@ package handlers
 import (
 	"errors"
 
-	"github.com/adrianowsh/bookfy-api/db"
-	"github.com/adrianowsh/bookfy-api/types"
+	"github.com/adrianowsh/booking/db"
+	"github.com/adrianowsh/booking/types"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -21,7 +21,7 @@ func NewUserHandler(userStore db.UserStoreInterface) *UserHandlerInterface {
 	}
 }
 
-func (h *UserHandlerInterface) HandlehPostUser(c *fiber.Ctx) error {
+func (h *UserHandlerInterface) HandlerPostUser(c *fiber.Ctx) error {
 	var params types.CreateUserParams
 	if err := c.BodyParser(&params); err != nil {
 		return err

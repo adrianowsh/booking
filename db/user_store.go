@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"github.com/adrianowsh/bookfy-api/types"
+	"github.com/adrianowsh/booking/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,7 +11,13 @@ import (
 
 const userColl = "users"
 
+type DropperInterface interface {
+	Drop(context.Context) error
+}
+
 type UserStoreInterface interface {
+	DropperInterface
+
 	CreateUser(context.Context, *types.User) (*types.User, error)
 	GetUserById(context.Context, string) (*types.User, error)
 	GetUsersPaginated(context.Context) ([]*types.User, error)
@@ -24,10 +30,10 @@ type MongoUserStore struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoUserStore(client *mongo.Client) *MongoUserStore {
+func NewMongoUserStore(client *mongo.Client, dbname string) *MongoUserStore {
 	return &MongoUserStore{
 		client: client,
-		coll:   client.Database(DBNAME).Collection(userColl),
+		coll:   client.Database(dbname).Collection(userColl),
 	}
 }
 
@@ -91,5 +97,13 @@ func (m *MongoUserStore) UpdateUser(ctx context.Context, filter bson.M, params t
 		return err
 	}
 
+	return nil
+}
+
+func (m *MongoUserStore) Drop(ctx context.Context) error {
+	println("------ droppping user collection ------")
+	if err := m.coll.Drop(ctx); err != nil {
+		return err
+	}
 	return nil
 }

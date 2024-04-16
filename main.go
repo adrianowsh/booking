@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 
-	"github.com/adrianowsh/bookfy-api/db"
-	"github.com/adrianowsh/bookfy-api/handlers"
+	"github.com/adrianowsh/booking/db"
+	"github.com/adrianowsh/booking/handlers"
 	"github.com/gofiber/fiber/v2"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	//handlers initialization
-	userHandler := handlers.NewUserHandler(db.NewMongoUserStore(client))
+	userHandler := handlers.NewUserHandler(db.NewMongoUserStore(client, dbname))
 
 	app := fiber.New(config)
 	api := app.Group("/api")
@@ -44,7 +44,7 @@ func main() {
 	v1.Get("/users", userHandler.HandleGetUsers)
 	v1.Get("/users/:id", userHandler.HandleGetUser)
 	v1.Put("/users/:id", userHandler.HandlePutUser)
-	v1.Post("/users", userHandler.HandlehPostUser)
+	v1.Post("/users", userHandler.HandlerPostUser)
 	v1.Delete("/users/:id", userHandler.HandleDeleteUser)
 
 	app.Listen(*listenAddr)

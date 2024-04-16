@@ -1,4 +1,4 @@
-module github.com/adrianowsh/bookfy-api
+module github.com/adrianowsh/booking
 
 go 1.22.0
 
